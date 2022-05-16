@@ -1,6 +1,3 @@
-from re import X
-from statistics import mode
-
 from fastapi import HTTPException
 from . import models, schemas
 
@@ -52,3 +49,21 @@ def create_photo(db: Session, filename: str, file: typing.BinaryIO, point_id) ->
     db.commit()
     db.refresh(db_photo)
     return db_photo
+
+
+def plus_rating(db: Session, point_id) -> bool:
+    db_point = db.query(models.Point).filter(models.Point.id == point_id).first()
+    if db_point is None:
+        raise HTTPException(400, f'Point(id={point_id}) is None')
+    db_point.rating = db_point.rating + 1
+    db.commit()
+    return True
+
+
+def minus_rating(db: Session, point_id) -> bool:
+    db_point = db.query(models.Point).filter(models.Point.id == point_id).first()
+    if db_point is None:
+        raise HTTPException(400, f'Point(id={point_id}) is None')
+    db_point.rating = db_point.rating - 1
+    db.commit()
+    return True

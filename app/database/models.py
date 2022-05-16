@@ -36,7 +36,7 @@ class Point(Base):
     comments = relationship('Comment', back_populates="point")
 
     def __repr__(self):
-        return f'Point(id={self.id} name={self.name} coords={self.coord_x}:{self.coord_y})'
+        return f'Point(id={self.id} name={self.name} coords={self.x}:{self.y})'
 
 
 class Photo(Base):

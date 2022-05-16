@@ -63,3 +63,13 @@ def create_point(point: schemas.PointCreate, db: Session = Depends(get_db)):
 def create_photo(id: int, file: UploadFile, db: Session = Depends(get_db)):
     filename = f'{random.randint(100000,999999)}{file.filename}'
     return crud.create_photo(db, filename, file.file, id)
+
+
+@router.post('/point/{id}/like')
+def like_point(id: int, db: Session = Depends(get_db)):
+    return crud.plus_rating(db, id)
+
+
+@router.post('/point/{id}/dislike')
+def dislike_point(id: int, db: Session = Depends(get_db)):
+    return crud.minus_rating(db, id)
