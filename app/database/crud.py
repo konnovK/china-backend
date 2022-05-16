@@ -1,9 +1,9 @@
-from xml.etree.ElementTree import Comment
 from fastapi import HTTPException
 from . import models, schemas
 
 from sqlalchemy.orm import Session
 import typing
+import hashlib
 
 
 def get_categories(db: Session) -> list[schemas.Category]:
@@ -80,3 +80,35 @@ def create_comment_by_point_id(db: Session, point_id: int, comment: schemas.Comm
     db.commit()
     db.refresh(db_comment)
     return db_comment
+
+
+def create_user(db: Session, user: schemas.User) -> models.User:
+    db_password = hashlib.sha224(user.password.encode()).hexdigest()
+    db_user = models.User(login=user.login, password=db_password)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+def get_user(db: Session, user: schemas.User) -> bool:
+    return db.query(models.User).filter(models.User.login == user.login).first()
+
+
+def create_session(db: Session, token: str):
+    db_session = models.Sessions(token=token)
+    db.add(db_session)
+    db.commit()
+    db.refresh(db_session)
+    return True
+
+
+def delete_session(db: Session, token: str):
+    db_session = db.query(models.Sessions).filter(models.Sessions.token == token).first()
+    db.delete(db_session)
+    db.commit()
+    return True
+
+
+def get_session(db: Session, token: str):
+    return db.query(models.Sessions).filter(models.Sessions.token == token).first()

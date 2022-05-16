@@ -1,3 +1,4 @@
+from enum import unique
 from .database import Base
 
 from sqlalchemy import Column, ForeignKey, Integer, Float, Text, String
@@ -10,8 +11,8 @@ class Category(Base):
     __tablename__ = "category"
 
     id = Column(Integer, primary_key=True)
-    title = Column(String(128))
-    color = Column(String(128))
+    title = Column(String(128), unique=True)
+    color = Column(String(128), unique=True)
     
     points = relationship('Point', back_populates="category", cascade="all, delete-orphan")
 
@@ -66,3 +67,22 @@ class Comment(Base):
 
     def __repr__(self):
         return f'Comment(id={self.id} author={self.author} text={self.text})'
+
+
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(Integer, primary_key=True)
+
+    login = Column(String(128), unique=True)
+    password = Column(String(128))
+
+    def __repr__(self):
+        return f'User(id={self.id} login={self.login})'
+
+
+class Sessions(Base):
+    __tablename__ = "sessions"
+
+    id = Column(Integer, primary_key=True)
+    token = Column(String(128), unique=True)
