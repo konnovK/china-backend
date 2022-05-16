@@ -5,6 +5,8 @@ from app.dependencies import get_db
 
 from sqlalchemy.orm import Session
 
+import random
+
 
 router = APIRouter()
 
@@ -59,4 +61,5 @@ def create_point(point: schemas.PointCreate, db: Session = Depends(get_db)):
 
 @router.post('/point/{id}/photo', response_model=schemas.Photo)
 def create_photo(id: int, file: UploadFile, db: Session = Depends(get_db)):
-    return crud.create_photo(db, file.filename, file.file, id)
+    filename = f'{random.randint(100000,999999)}{file.filename}'
+    return crud.create_photo(db, filename, file.file, id)
