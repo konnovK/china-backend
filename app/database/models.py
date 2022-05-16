@@ -23,8 +23,8 @@ class Point(Base):
     __tablename__ = "point"
 
     id = Column(Integer, primary_key=True)
-    coord_x = Column(Float)
-    coord_y = Column(Float)
+    x = Column(Float)
+    y = Column(Float)
     name = Column(String(128))
     description = Column(Text)
     rating = Column(Integer)
@@ -43,7 +43,7 @@ class Photo(Base):
     __tablename__ = "photo"
 
     id = Column(Integer, primary_key=True)
-    file_path = Column(String(128))
+    url = Column(String(128))
 
     point_id = Column(Integer, ForeignKey("point.id"), nullable=False)
 

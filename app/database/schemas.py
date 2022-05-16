@@ -4,22 +4,37 @@ from pydantic import BaseModel
 from app.database import models
 
 
-class CategoryBase(BaseModel):
-    title: str
-    color: str
-
-
-class CategoriesResponse(BaseModel):
-    categories: list[CategoryBase]
-
-
-class Photo(BaseModel):
+class PhotoBase(BaseModel):
     url: str
 
 
-class Comment(BaseModel):
+class Photo(PhotoBase):
+    id: int
+    point_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CommentBase(BaseModel):
     author: str
     text: str
+
+
+class Comment(CommentBase):
+    id: int
+    point_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class PointCreate(BaseModel):
+    x: float
+    y: float
+    name: str
+    description: str
+    category_id: int
 
 
 class PointBase(BaseModel):
@@ -28,10 +43,27 @@ class PointBase(BaseModel):
     name: str
     description: str
     rating: int
-    category: str
     photos: list[Photo] | None
     comments: list[Comment] | None
 
 
-class PointsResponse(BaseModel):
-    points: list[PointBase]
+class Point(PointBase):
+    id: int
+    category_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CategoryBase(BaseModel):
+    title: str
+    color: str
+
+class CategoryResponse(CategoryBase):
+    id: int
+
+
+class Category(CategoryResponse):
+    points: list[Point]
+    class Config:
+        orm_mode = True
