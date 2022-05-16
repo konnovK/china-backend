@@ -65,11 +65,11 @@ def create_photo(id: int, file: UploadFile, db: Session = Depends(get_db)):
     return crud.create_photo(db, filename, file.file, id)
 
 
-@router.post('/point/{id}/like')
+@router.post('/point/{id}/like', response_model=bool)
 def like_point(id: int, db: Session = Depends(get_db)):
     return crud.plus_rating(db, id)
 
 
-@router.post('/point/{id}/dislike')
+@router.post('/point/{id}/dislike', response_model=bool)
 def dislike_point(id: int, db: Session = Depends(get_db)):
     return crud.minus_rating(db, id)
