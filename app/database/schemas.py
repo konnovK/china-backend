@@ -21,6 +21,10 @@ class CommentBase(BaseModel):
     text: str
 
 
+class CommentCreate(BaseModel):
+    text: str
+
+
 class Comment(CommentBase):
     id: int
     point_id: int

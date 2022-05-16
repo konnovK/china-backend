@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import Comment
 from fastapi import HTTPException
 from . import models, schemas
 
@@ -41,7 +42,7 @@ def create_point(db: Session, point: schemas.PointCreate) -> models.Point | None
 
 
 # typing.BinaryIO
-def create_photo(db: Session, filename: str, file: typing.BinaryIO, point_id) -> models.Photo:
+def create_photo(db: Session, filename: str, file: typing.BinaryIO, point_id: int) -> models.Photo:
     with open(f'static/{filename}', 'wb') as f:
         f.write(file.read())
     db_photo = models.Photo(url = f'static/{filename}', point_id=point_id)
@@ -51,7 +52,7 @@ def create_photo(db: Session, filename: str, file: typing.BinaryIO, point_id) ->
     return db_photo
 
 
-def plus_rating(db: Session, point_id) -> bool:
+def plus_rating(db: Session, point_id: int) -> bool:
     db_point = db.query(models.Point).filter(models.Point.id == point_id).first()
     if db_point is None:
         raise HTTPException(400, f'Point(id={point_id}) is None')
@@ -60,10 +61,22 @@ def plus_rating(db: Session, point_id) -> bool:
     return True
 
 
-def minus_rating(db: Session, point_id) -> bool:
+def minus_rating(db: Session, point_id: int) -> bool:
     db_point = db.query(models.Point).filter(models.Point.id == point_id).first()
     if db_point is None:
         raise HTTPException(400, f'Point(id={point_id}) is None')
     db_point.rating = db_point.rating - 1
     db.commit()
     return True
+
+
+def get_comments_by_point_id(db: Session, point_id: int):
+    return db.query(models.Comment).filter(models.Comment.point_id == point_id).all()
+
+
+def create_comment_by_point_id(db: Session, point_id: int, comment: schemas.CommentCreate, author: str):
+    db_comment = models.Comment(author=author, text=comment.text, point_id=point_id)
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    return db_comment

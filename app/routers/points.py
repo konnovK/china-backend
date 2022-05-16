@@ -73,3 +73,14 @@ def like_point(id: int, db: Session = Depends(get_db)):
 @router.post('/point/{id}/dislike', response_model=bool)
 def dislike_point(id: int, db: Session = Depends(get_db)):
     return crud.minus_rating(db, id)
+
+
+@router.get('/point/{id}/comment', response_model=list[schemas.Comment])
+def get_comments(id: int, db: Session = Depends(get_db)):
+    return crud.get_comments_by_point_id(db, id)
+
+
+@router.post('/point/{id}/comment', response_model=schemas.Comment)
+def create_comment(id: int, comment: schemas.CommentCreate, db: Session = Depends(get_db)):
+    author = "qwerty" # TODO: get author from jwt
+    return crud.create_comment_by_point_id(db, id, comment, author)
