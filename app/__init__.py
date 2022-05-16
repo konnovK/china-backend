@@ -2,7 +2,7 @@ from http.client import HTTPException
 from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
 
-from app.routers import points
+from app.routers import points, photo, category
 from app.database import database, models
 
 
@@ -18,6 +18,8 @@ async def root():
 
 
 app.include_router(points.router)
+app.include_router(photo.router)
+app.include_router(category.router)
 
 
 @app.middleware("http")
