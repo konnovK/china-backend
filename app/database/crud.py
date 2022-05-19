@@ -25,6 +25,10 @@ def get_points(db: Session) -> list[models.Point]:
     return db.query(models.Point).all()
 
 
+def get_point_by_id(db: Session, id: int) -> models.Point:
+    return db.query(models.Point).filter(models.Point.id == id).first()
+
+
 def get_points_by_category_id(db: Session, category_id: int) -> list[models.Point]:
     return db.query(models.Point).filter(models.Point.category_id == category_id).all()
 
@@ -80,7 +84,7 @@ def minus_rating(db: Session, point_id: int) -> bool:
     return True
 
 
-def get_comments_by_point_id(db: Session, point_id: int):
+def get_comments_by_point_id(db: Session, point_id: int) -> list[models.Comment]:
     return db.query(models.Comment).filter(models.Comment.point_id == point_id).all()
 
 

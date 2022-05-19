@@ -71,9 +71,18 @@ def dislike_point(id: int, db: Session = Depends(get_db)):
     return crud.minus_rating(db, id)
 
 
-@router.get('/point/{id}/comment', response_model=list[schemas.Comment])
+@router.get('/point/{id}/comment', response_model=schemas.CommentResponse)
 def get_comments_by_point_id(id: int, db: Session = Depends(get_db)):
-    return crud.get_comments_by_point_id(db, id)
+    point = crud.get_point_by_id(db, id)
+    comments = crud.get_comments_by_point_id(db, id)
+    response = schemas.CommentResponse(
+        description=point.description,
+        comments=list(map(lambda c: schemas.CommentBase(
+            author=c.author,
+            text=c.text
+        ), comments))
+    )
+    return response
 
 
 @router.post('/point/{id}/comment', response_model=schemas.Comment)
