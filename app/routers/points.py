@@ -72,7 +72,7 @@ def dislike_point(id: int, db: Session = Depends(get_db)):
 
 
 @router.get('/point/{id}/comment', response_model=list[schemas.Comment])
-def get_comments(id: int, db: Session = Depends(get_db)):
+def get_comments_by_point_id(id: int, db: Session = Depends(get_db)):
     return crud.get_comments_by_point_id(db, id)
 
 

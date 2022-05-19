@@ -58,6 +58,10 @@ def create_photo(db: Session, filename: str, file: typing.BinaryIO, point_id: in
     return db_photo
 
 
+def get_photos_by_point_id(db: Session, point_id: int) -> list[models.Photo]:
+    return db.query(models.Photo).filter(models.Photo.point_id == point_id).all()
+
+
 def plus_rating(db: Session, point_id: int) -> bool:
     db_point = db.query(models.Point).filter(models.Point.id == point_id).first()
     if db_point is None:
