@@ -29,6 +29,22 @@ def get_points(db: Session = Depends(get_db)):
     return points
 
 
+@router.get('/category/{id}/point', response_model=list[schemas.PointResponse])
+def get_points_by_category_id(id: int, db: Session = Depends(get_db)):
+    points = list(map(lambda p: schemas.PointResponse(
+        id=p.id,
+        coordinates=[p.x, p.y],
+        offset=p.offset,
+        name=p.name,
+        rating=p.rating,
+        category=schemas.PointCategory(
+            title=p.category.title,
+            color=p.category.color,
+        )
+    ), crud.get_points_by_category_id(db, id)))
+    return points
+
+
 @router.post('/point', response_model=schemas.PointBase)
 def create_point(point: schemas.PointCreate, db: Session = Depends(get_db)):
     db_created_point = crud.create_point(db, point)

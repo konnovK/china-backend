@@ -25,6 +25,10 @@ def get_points(db: Session) -> list[models.Point]:
     return db.query(models.Point).all()
 
 
+def get_points_by_category_id(db: Session, category_id: int) -> list[models.Point]:
+    return db.query(models.Point).filter(models.Point.category_id == category_id).all()
+
+
 def create_point(db: Session, point: schemas.PointCreate) -> models.Point | None:
     db_category = get_category_by_id(db, point.category_id)
     if db_category is None:
