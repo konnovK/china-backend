@@ -36,14 +36,31 @@ class Comment(CommentBase):
 class PointCreate(BaseModel):
     x: float
     y: float
+    offset: int
     name: str
     description: str
     category_id: int
 
 
+class PointCategory(BaseModel):
+    title: str
+    color: str
+
+
+class PointResponse(BaseModel):
+    id: int
+    name: str
+    coordinates: list[float]
+    offset: int
+    rating: int
+    category: PointCategory
+
+
+
 class PointBase(BaseModel):
     x: float
     y: float
+    offset: int
     name: str
     description: str
     rating: int
@@ -53,6 +70,7 @@ class PointBase(BaseModel):
 
 class Point(PointBase):
     id: int
+    offset: int
     category_id: int
 
     class Config:

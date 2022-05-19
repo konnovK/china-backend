@@ -13,16 +13,18 @@ router = APIRouter(
 )
 
 
-@router.get('/point', response_model=list[schemas.PointBase])
+@router.get('/point', response_model=list[schemas.PointResponse])
 def get_points(db: Session = Depends(get_db)):
-    points = list(map(lambda p: schemas.PointBase(
-        x=p.x,
-        y=p.y,
+    points = list(map(lambda p: schemas.PointResponse(
+        id=p.id,
+        coordinates=[p.x, p.y],
+        offset=p.offset,
         name=p.name,
-        description=p.description,
         rating=p.rating,
-        photos=p.photos,
-        comments=p.comments,
+        category=schemas.PointCategory(
+            title=p.category.title,
+            color=p.category.color,
+        )
     ), crud.get_points(db)))
     return points
 
@@ -33,6 +35,7 @@ def create_point(point: schemas.PointCreate, db: Session = Depends(get_db)):
     created_point = schemas.PointBase(
         x=db_created_point.x,
         y=db_created_point.y,
+        offset=db_created_point.offset,
         name=db_created_point.name,
         description=db_created_point.description,
         rating=db_created_point.rating,

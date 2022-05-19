@@ -1,4 +1,5 @@
 from enum import unique
+from turtle import color
 from .database import Base
 
 from sqlalchemy import Column, ForeignKey, Integer, Float, Text, String
@@ -26,6 +27,7 @@ class Point(Base):
     id = Column(Integer, primary_key=True)
     x = Column(Float)
     y = Column(Float)
+    offset = Column(Integer)
     name = Column(String(128))
     description = Column(Text)
     rating = Column(Integer)

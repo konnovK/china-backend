@@ -1,3 +1,4 @@
+from tkinter import OFF
 from fastapi import HTTPException
 from . import models, schemas
 
@@ -30,6 +31,7 @@ def create_point(db: Session, point: schemas.PointCreate) -> models.Point | None
         return None
     db_point = models.Point(x=point.x, 
                             y=point.y, 
+                            offset=point.offset,
                             name=point.name, 
                             description=point.description, 
                             rating=0,
