@@ -16,6 +16,12 @@ services:
       timeout: 3s
       retries: 5
     restart: unless-stopped
+        
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
   china:
     restart: unless-stopped
