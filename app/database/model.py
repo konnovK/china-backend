@@ -1,11 +1,8 @@
-from enum import unique
-from turtle import color
 from .database import Base
 
 from sqlalchemy import Column, ForeignKey, Integer, Float, Text, String
 
 from sqlalchemy.orm import relationship
-
 
 
 class Category(Base):
@@ -28,7 +25,7 @@ class Point(Base):
     x = Column(Float)
     y = Column(Float)
     offset = Column(Integer)
-    name = Column(String(128))
+    name = Column(String(128), unique=True)
     description = Column(Text)
     rating = Column(Integer)
 

@@ -1,32 +1,23 @@
-from http.client import HTTPException
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from app.routers import points, photo, category, user
-from app.database import database, models
+from app.database import database, model
+
+from app.point import router as point
+from app.category import router as category
 
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-models.Base.metadata.create_all(database.engine)
+database.Base.metadata.create_all(database.engine)
 
 
-@app.get("/")
+@app.get("/ping")
 async def root():
-    return {"message": "Hello World"}
+    return "pong"
 
 
-app.include_router(points.router)
-app.include_router(photo.router)
+app.include_router(point.router)
 app.include_router(category.router)
-app.include_router(user.router)
-
-
-# @app.middleware("http")
-# async def add_process_time_header(request: Request, call_next):
-#     try:
-#         response = await call_next(request)
-#     except Exception as e:
-#         response = Response(str(e), 500)
-#     return response
+# app.include_router(user.router)
