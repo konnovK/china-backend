@@ -19,11 +19,6 @@ def get_points(db: Session = Depends(get_db)):
     return controller.get_points(db)
 
 
-# @router.get('/category/{id}/point', response_model=list[schema.Point])
-# def get_points_by_category_id(id: int, db: Session = Depends(get_db)):
-#     return controller.get_points_by_category_id(db, id)
-
-
 @router.post('/', response_model=schema.Point)
 def create_point(point: schema.PointBase, db: Session = Depends(get_db)):
     return controller.create_point(db, point)
