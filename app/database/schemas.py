@@ -61,6 +61,11 @@ class PointResponse(BaseModel):
     category: PointCategory
 
 
+class PointInfo(BaseModel):
+    description: str
+    comments: list[CommentBase]
+    photos: list[PhotoBase]
+
 
 class PointBase(BaseModel):
     x: float
