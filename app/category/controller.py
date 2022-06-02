@@ -7,15 +7,10 @@ from app.category import crud, schema
 
 
 def get_categories(db: Session) -> list[schema.CategoryBase]:
-    categories: list[schema.CategoryBase] = list(map(lambda c: schema.CategoryBase(
-        title=c.title,
-        color=c.color
-    ), crud.get_categories(db)))
-
-    return categories
+    return list(map(schema.category_base_from_model, crud.get_categories(db)))
 
 
-def create_category(db: Session, category: schema.CategoryBase) -> schema.Category:
+def create_category(db: Session, category: schema.CategoryCreate) -> schema.Category:
     try:
         return crud.create_category(db, category)
     except DBAPIError as e:
@@ -25,15 +20,10 @@ def create_category(db: Session, category: schema.CategoryBase) -> schema.Catego
 def get_category_points(db: Session, category_id: int) -> list[schema.PointResponse]:
     try:
         category = crud.get_category_by_id(db, category_id)
-
-        points = list(map(lambda p: schema.PointResponse(
-            id=p.id,
-            rating=p.rating,
-            coordinates=[p.x, p.y],
-            offset=p.offset,
-            name=p.name,
-            category=schema.CategoryBase(title=category.title, color=category.color)
-        ), crud.get_category_points(db, category_id)))
+        points = list(map(
+            lambda p: schema.point_response_from_model(p, category),
+            crud.get_category_points(db, category_id)
+        ))
         return points
     except DBAPIError as e:
         raise HTTPException(500, str(e))

@@ -10,21 +10,15 @@ from app.comment.schema import Comment, CommentBase
 from app.photo.schema import PhotoBase
 from app.photo.crud import get_photos_by_point_id
 from app.comment.crud import get_comments_by_point_id
-from app.category.schema import PointResponse, CategoryBase
+from app.category.schema import PointResponse, point_response_from_model
 from app.category.crud import get_category_by_id
+from app.database import model
 
 
 def get_points(db: Session) -> list[PointResponse]:
-    def point_to_response(p: schema.Point) -> PointResponse:
+    def point_to_response(p: model.Point) -> PointResponse:
         category = get_category_by_id(db, p.category_id)
-        return PointResponse(
-            id=p.id,
-            rating=p.rating,
-            coordinates=[p.x, p.y],
-            offset=p.offset,
-            name=p.name,
-            category=CategoryBase(title=category.title, color=category.color)
-        )
+        return point_response_from_model(p, category)
     try:
         points = list(map(point_to_response, crud.get_points(db)))
         return points

@@ -18,7 +18,7 @@ def get_categories(db: Session = Depends(get_db)):
 
 
 @router.post('/', response_model=schema.Category)
-def create_category(category: schema.CategoryBase, db: Session = Depends(get_db)):
+def create_category(category: schema.CategoryCreate, db: Session = Depends(get_db)):
     return controller.create_category(db, category)
 
 
