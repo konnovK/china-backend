@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class PhotoBase(BaseModel):
     url: str
+    main: bool
 
 
 class Photo(PhotoBase):

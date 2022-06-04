@@ -1,6 +1,7 @@
+from email.policy import default
 from .database import Base
 
-from sqlalchemy import Column, ForeignKey, Integer, Float, Text, String
+from sqlalchemy import Column, ForeignKey, Integer, Float, Text, String, Boolean
 
 from sqlalchemy.orm import relationship
 
@@ -44,6 +45,7 @@ class Photo(Base):
 
     id = Column(Integer, primary_key=True)
     url = Column(String(128))
+    main = Column(Boolean, default=False)
 
     point_id = Column(Integer, ForeignKey("point.id"), nullable=False)
 

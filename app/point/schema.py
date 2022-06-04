@@ -28,3 +28,4 @@ class PointInfo(BaseModel):
     description: str
     comments: list[Comment]
     photos: list[Photo]
+    main_photo: list[Photo]

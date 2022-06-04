@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, UploadFile
+from sqlalchemy import false
 
 from sqlalchemy.orm import Session
 
@@ -45,5 +46,5 @@ def create_comment(id: int, comment: CommentBase, db: Session = Depends(get_db))
 
 
 @router.post('/{id}/photo', response_model=Photo)
-async def create_photo(id: int, file: UploadFile, db: Session = Depends(get_db)):
-    return await controller.create_photo(db, id, file)
+async def create_photo(id: int, file: UploadFile, db: Session = Depends(get_db), main: bool = False):
+    return await controller.create_photo(db, id, file, main)

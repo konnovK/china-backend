@@ -1,4 +1,5 @@
 import random
+from threading import main_thread
 
 from fastapi import HTTPException
 
@@ -8,7 +9,7 @@ from sqlalchemy.exc import DBAPIError
 from app.point import crud, schema
 from app.comment.schema import Comment, CommentBase
 from app.photo.schema import PhotoBase
-from app.photo.crud import get_photos_by_point_id
+from app.photo.crud import get_photos_by_point_id, get_main_photos_by_point_id
 from app.comment.crud import get_comments_by_point_id
 from app.category.schema import PointResponse, point_response_from_model
 from app.category.crud import get_category_by_id
@@ -50,12 +51,14 @@ def dislike_point(db: Session, id: int) -> int:
 def get_point_info_by_id(db: Session, id: int) -> schema.PointInfo:
     point = crud.get_point_by_id(db, id)
     photos = get_photos_by_point_id(db, id)
+    main_photos = get_main_photos_by_point_id(db, id)
     comments = get_comments_by_point_id(db, id)
     point_info = schema.PointInfo(
         rating=point.rating,
         description=point.description,
         comments=comments,
-        photos=photos
+        photos=photos,
+        main_photo=main_photos
     )
     return point_info
 
@@ -68,14 +71,14 @@ def create_comment_by_point_id(db: Session, id: int, comment: CommentBase) -> Co
         raise HTTPException(500, str(e))
 
 
-async def create_photo(db: Session, id: int, file):
+async def create_photo(db: Session, id: int, file, main):
     try:
         filename = f'static/{random.randint(100000, 999999)}{file.filename}'
 
         with open(filename, 'wb') as f:
             f.write(await file.read())
 
-        photo = PhotoBase(url=filename)
+        photo = PhotoBase(url=filename, main=main)
 
         return crud.create_photo_by_point_id(db, id, photo)
     except DBAPIError as e:
