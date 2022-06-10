@@ -65,8 +65,8 @@ def get_point_info_by_id(db: Session, id: int) -> schema.PointInfo:
 
 def create_comment_by_point_id(db: Session, id: int, comment: CommentBase) -> Comment:
     try:
-        author = "qwerty"  # TODO: get author from jwt
-        return crud.create_comment_by_point_id(db, id, comment, author)
+        # author = comment.author  # TODO: get author from jwt
+        return crud.create_comment_by_point_id(db, id, comment)
     except DBAPIError as e:
         raise HTTPException(500, str(e))
 

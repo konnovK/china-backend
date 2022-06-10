@@ -46,8 +46,8 @@ def decrement_point_rating(db: Session, point_id: int) -> int:
     return new_rating
 
 
-def create_comment_by_point_id(db: Session, point_id: int, comment: CommentBase, author: str) -> model.Comment:
-    db_comment = model.Comment(**comment.dict(), author=author, point_id=point_id)
+def create_comment_by_point_id(db: Session, point_id: int, comment: CommentBase) -> model.Comment:
+    db_comment = model.Comment(**comment.dict(), point_id=point_id)
     db.add(db_comment)
     db.commit()
     db.refresh(db_comment)
